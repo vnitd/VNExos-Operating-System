@@ -39,10 +39,10 @@ static bool pmm_new_entry(memmap_entry *m, size_t *count, uint64_t base, uint64_
 			pmm_insert_entry(m, ++(*count), ++i, &memmap);
 			if (base + length < entry_top)
 			{
-				memmap = {base + length, entry_top, entry_type};
+				memmap = {base + length, entry_top - base - length, entry_type};
 				pmm_insert_entry(m, ++(*count), ++i, &memmap);
 			}
-			break;
+			return true;
 		}
 		// lay in the bottom of entry or whole of the entry
 		if (base == entry_base && base + length <= entry_top)
@@ -55,8 +55,10 @@ static bool pmm_new_entry(memmap_entry *m, size_t *count, uint64_t base, uint64_
 				memmap_entry memmap = {base + length, entry_top - base - length, entry_type};
 				pmm_insert_entry(m, ++(*count), ++i, &memmap);
 			}
+			return true;
 		}
 	}
+	return false;
 }
 
 meminfo mmap_get_info(size_t mmap_count, memmap_entry *mmap)
