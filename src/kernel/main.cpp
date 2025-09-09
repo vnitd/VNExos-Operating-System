@@ -11,14 +11,11 @@
 
 extern "C" void KMain(void)
 {
-	init_idt();
+    init_idt();
 
-	size_t		  size = 0;
-	memmap_entry *mmap = get_raw_memmap(&size);
+    size_t        size = 0;
+    memmap_entry *mmap = get_raw_memmap(&size);
 
-	print_memmap(mmap, size);
-
-	uint8_t *ch = (uint8_t *)0xb8000;
-	ch[158] = 'a';
-	ch[159] = 0x0a;
+    print_memmap(mmap, size);
+    init_memory(mmap, size);
 }
